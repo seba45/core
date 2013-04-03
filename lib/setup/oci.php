@@ -3,7 +3,14 @@
 namespace OC\Setup;
 
 class OCI extends AbstractDatabase {
+	public $dbprettyname = 'Oracle';
+
 	protected $dbtablespace;
+
+	public function validate($config) {
+		$errors = $this->validateBasic($config);
+		return $errors;
+	}
 
 	public function initialize($config) {
 		parent::initialize($config);

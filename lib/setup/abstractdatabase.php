@@ -12,7 +12,28 @@ abstract class AbstractDatabase {
 
 	public function __construct($trans, $config) {
 		$this->trans = $trans;
-		$this->initialize($config);
+	}
+
+	public function validateBasic($config) {
+		$errors = array();
+		if(empty($config['dbuser'])) {
+			$errors[] = $this->trans->t("%s enter the database username.", array($this->dbprettyname));
+		}
+		if(empty($config['dbname'])) {
+			$errors[] = $this->trans->t("%s enter the database name.", array($this->dbprettyname));
+		}
+		if(substr_count($config['dbname'], '.') >= 1) {
+			$errors[] = $this->trans->t("%s you may not use dots in the database name", array($this->dbprettyname));
+		}
+		return $errors;
+	}
+
+	public function validate($config) {
+		$errors = $this->validateBasic($config);
+		if(empty($config['dbhost'])) {
+			$errors[] = $this->trans->t("%s set the database host.", array($this->dbprettyname));
+		}
+		return $errors;
 	}
 
 	public function initialize($config) {
